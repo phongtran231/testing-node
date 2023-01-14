@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: zui_api_db
+    ports:
+      - 3306:3306
+    volumes:
+      - db_data:/var/lib/mysql
+    env_file:
+      - ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+  app:
+    container_name: zui_api_dev
+    image: zui-api-dev
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    ports:
+      - ${APP_PORT}:3000
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  db_data:
+    driver: local
