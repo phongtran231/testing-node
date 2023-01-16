@@ -97,7 +97,7 @@ export class ClientService {
     return items.map((item) => {
       let status = 'FT';
       const diffTimeMatch = moment(item.on_time).diff(moment.now(), 'minutes');
-      if (diffTimeMatch > 0 && diffTimeMatch <= 90) {
+      if (diffTimeMatch >= 0 && diffTimeMatch <= 90) {
         status = 'LIVE';
       }
       if (diffTimeMatch > 90) {
@@ -112,6 +112,7 @@ export class ClientService {
         home_score: item.home_score,
         guest_score: item.guest_score,
         on_time: item.on_time,
+        diff: diffTimeMatch,
       };
     });
   }
